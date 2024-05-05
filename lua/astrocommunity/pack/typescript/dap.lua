@@ -36,7 +36,8 @@ return {
     if not dap.configurations.javascript then
       dap.configurations.javascript = js_config
     else
-      require("astrocore").extend_tbl(dap.configurations.javascript, js_config)
+      utils.extend_tbl(dap.configurations.javascript, js_config)
+      utils.extend_tbl(dap.configurations.typescript, js_config)
     end
   end,
 }
