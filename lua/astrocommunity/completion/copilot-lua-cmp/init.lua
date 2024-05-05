@@ -1,10 +1,5 @@
 return {
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "User AstroFile",
-    opts = { suggestion = { auto_trigger = true, debounce = 150 } },
-  },
+  { import = "astrocommunity.completion.copilot-lua" },
   {
     "hrsh7th/nvim-cmp",
     dependencies = { "zbirenbaum/copilot.lua" },
@@ -51,7 +46,7 @@ return {
         if copilot.is_visible() then copilot.accept_line() end
       end)
 
-      opts.mapping["<C-n>"] = cmp.mapping(function()
+      opts.mapping["<C-j>"] = cmp.mapping(function()
         if copilot.is_visible() then copilot.accept_line() end
       end)
 

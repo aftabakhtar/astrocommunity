@@ -1,19 +1,50 @@
-local utils = require "astronvim.utils"
 return {
   {
+    "AstroNvim/astrolsp",
+    optional = true,
+    ---@type AstroLSPOpts
+    opts = {
+      ---@diagnostic disable: missing-fields
+      config = {
+        volar = {
+          init_options = {
+            vue = {
+              hybridMode = false,
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
+    optional = true,
     opts = function(_, opts)
       if opts.ensure_installed ~= "all" then
-        opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "vue")
+        opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "vue" })
       end
     end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    opts = function(_, opts) opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "volar") end,
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "volar" })
+    end,
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
-    opts = function(_, opts) opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "js") end,
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "js" })
+    end,
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed =
+        require("astrocore").list_insert_unique(opts.ensure_installed, { "vue-language-sever", "js-debug-adapter" })
+    end,
   },
 }

@@ -1,12 +1,15 @@
 return {
   "toppair/peek.nvim",
+  lazy = true,
   build = "deno task --quiet build:fast",
-  config = function()
-    vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-    vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-  end,
-  cmd = {
-    "PeekOpen",
-    "PeekClose",
+  dependencies = {
+    "AstroNvim/astrocore",
+    opts = {
+      commands = {
+        PeekOpen = { function() require("peek").open() end, desc = "Open preview window" },
+        PeekClose = { function() require("peek").close() end, desc = "Close preview window" },
+      },
+    },
   },
+  opts = {},
 }

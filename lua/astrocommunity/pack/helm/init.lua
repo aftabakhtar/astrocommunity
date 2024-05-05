@@ -1,67 +1,57 @@
-local utils = require "astronvim.utils"
 return {
-  -- Helm support
   {
-    "nvim-treesitter/nvim-treesitter",
-    optional = true,
-    dependencies = {
-      {
-        "ngalaiko/tree-sitter-go-template",
-        config = function()
-          require("nvim-treesitter.parsers").get_parser_configs().gotmpl = {
-            install_info = {
-              url = vim.fn.stdpath "data" .. "/lazy/tree-sitter-go-template",
-              files = "src/parser.c",
-            },
-            filetype = "helm",
-          }
-        end,
+    "AstroNvim/astrocore",
+    ---@type AstroCoreOpts
+    opts = {
+      autocmds = {
+        helm_commentstring = {
+          {
+            event = "FileType",
+            pattern = "helm",
+            callback = function() vim.opt_local.commentstring = "{{/* %s */}}" end,
+          },
+        },
+      },
+      filetypes = {
+        extension = { gotmpl = "helm" },
+        pattern = {
+          [".*/templates/.*%.ya?ml"] = "helm",
+          [".*/templates/.*%.tpl"] = "helm",
+          ["helmfile.*%.ya?ml"] = "helm",
+        },
       },
     },
   },
   {
-    "williamboman/mason-lspconfig.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    optional = true,
     opts = function(_, opts)
-      opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "helm_ls")
-
-      local configs = require "lspconfig.configs"
-      local lspconfig = require "lspconfig"
-      local util = require "lspconfig.util"
-
-      if not configs.helm_ls then
-        configs.helm_ls = {
-          default_config = {
-            cmd = { "helm_ls", "serve" },
-            filetypes = { "helm" },
-            root_dir = function(fname) return util.root_pattern "Chart.yaml"(fname) end,
-          },
-        }
+      if opts.ensure_installed ~= "all" then
+        opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "helm" })
       end
-
-      lspconfig.helm_ls.setup {
-        filetypes = { "helm" },
-        cmd = { "helm_ls", "serve" },
-      }
     end,
   },
   {
-    "towolf/vim-helm",
-    init = function()
-      local function helm_ft(path, _)
-        -- check if file is in templates folder or is helmfile
-        local path_regex = vim.regex "/templates/*\\.(tpl|yaml)$|*.gotmpl|helmfile*.yaml"
-        if path_regex and path_regex:match_str(path) then return "helm" end
-
-        -- return yaml if nothing else
-        return "yaml"
-      end
-
-      vim.filetype.add {
-        extension = {
-          yaml = helm_ft,
-        },
-      }
+    "williamboman/mason-lspconfig.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "helm_ls" })
     end,
-    ft = "helm",
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "helm-ls" })
+    end,
+  },
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        helm = { { "prettierd", "prettier" } },
+      },
+    },
   },
 }

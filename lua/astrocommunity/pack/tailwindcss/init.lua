@@ -1,25 +1,46 @@
-local utils = require "astronvim.utils"
 return {
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if opts.ensure_installed ~= "all" then
-        opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "css")
-      end
-    end,
-  },
+  { import = "astrocommunity.pack.html-css" },
   {
     "williamboman/mason-lspconfig.nvim",
+    optional = true,
     opts = function(_, opts)
-      opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, { "tailwindcss", "cssls" })
+      opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "tailwindcss" })
     end,
+    dependencies = {
+      {
+        "AstroNvim/astrolsp",
+        optional = true,
+        ---@type AstroLSPOpts
+        opts = {
+          config = {
+            tailwindcss = {
+              root_dir = function(fname)
+                local root_pattern = require("lspconfig").util.root_pattern(
+                  "tailwind.config.cjs",
+                  "tailwind.config.js",
+                  "tailwind.config.ts",
+                  "postcss.config.js",
+                  "config/tailwind.config.js"
+                )
+                return root_pattern(fname)
+              end,
+            },
+          },
+        },
+      },
+    },
   },
   {
-    "jay-babu/mason-null-ls.nvim",
-    opts = function(_, opts) opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, { "prettierd" }) end,
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.ensure_installed =
+        require("astrocore").list_insert_unique(opts.ensure_installed, { "tailwindcss-language-server" })
+    end,
   },
   {
     "hrsh7th/nvim-cmp",
+    optional = true,
     dependencies = {
       { "js-everts/cmp-tailwind-colors", opts = {} },
     },
@@ -37,6 +58,7 @@ return {
   },
   {
     "NvChad/nvim-colorizer.lua",
+    optional = true,
     opts = {
       user_default_options = {
         names = true,

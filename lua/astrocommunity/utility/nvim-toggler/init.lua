@@ -1,11 +1,18 @@
 return {
   "nguyenvukhang/nvim-toggler",
   event = { "User AstroFile", "InsertEnter" },
-  keys = {
+  dependencies = {
     {
-      "<leader>i",
-      desc = "Toggle CursorWord",
+      "AstroNvim/astrocore",
+      opts = {
+        mappings = {
+          n = { ["<Leader>i"] = { function() require("nvim-toggler").toggle() end, desc = "Toggle CursorWord" } },
+          v = { ["<Leader>i"] = { function() require("nvim-toggler").toggle() end, desc = "Toggle CursorWord" } },
+        },
+      },
     },
   },
-  opts = {},
+  opts = {
+    remove_default_keybinds = true,
+  },
 }

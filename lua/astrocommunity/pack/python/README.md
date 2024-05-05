@@ -5,7 +5,8 @@
 This plugin pack does the following:
 
 - Adds `python` and `toml` Treesitter parsers
-- Adds `pyright` and `ruff_lsp` language servers
+- Adds `pyright` language servers
 - Adds the following `null-ls` sources:
   - [black](https://pypi.org/project/black/)
+  - [isort](https://pypi.org/project/isort/)
 - Adds `debugpy` for debugging

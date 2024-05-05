@@ -1,5 +1,5 @@
 return {
-  { "Bekaboo/dropbar.nvim", event = "VeryLazy", opts = {} },
+  { "Bekaboo/dropbar.nvim", event = "UIEnter", opts = {} },
   {
     "rebelot/heirline.nvim",
     optional = true,
@@ -8,6 +8,7 @@ return {
   {
     "catppuccin/nvim",
     optional = true,
+    ---@type CatppuccinOptions
     opts = { integrations = { dropbar = { enabled = true } } },
   },
 }

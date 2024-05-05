@@ -5,37 +5,38 @@ Neovim plugin for tagging important files
 **Repository:** <https://github.com/cbochs/grapple.nvim>
 
 ### Example of a custom Heirline component for AstroNvim
+
 ![image](https://github.com/Subjective/astrocommunity/assets/56745535/333069eb-dea7-428f-b28d-31fd5912f95f)
 
 ```lua
-local status = require "astronvim.utils.status"
+local status = require "astrocore.status"
 
 status.component.grapple = {
   provider = function()
     local available, grapple = pcall(require, "grapple")
     if available then
-      local key = grapple.key { buffer = 0 }
-      if key ~= nil then return " " .. key .. " " end
+      return grapple.statusline()
     end
   end,
 }
 ```
+
 **Example Configuration:**
+
 ```lua
 return {
   plugins = {
     {
       "rebelot/heirline.nvim",
       opts = function(_, opts)
-        local status = require("astronvim.utils.status")
+        local status = require("astrocore.status")
 
         -- custom heirline statusline component for grapple
         status.component.grapple = {
           provider = function()
             local available, grapple = pcall(require, "grapple")
             if available then
-              local key = grapple.key { buffer = 0 }
-              if key ~= nil then return " " .. key .. " " end
+              return grapple.statusline()
             end
           end,
         }
